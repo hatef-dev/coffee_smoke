@@ -23,8 +23,11 @@ void main() {
     float angle = twinPelin * 10.0;
     newPosition.xz = rotate2D(newPosition.xz, angle);
 
-
-
+    vec2 windOffset = vec2(
+        texture(uPerlinNoise, vec2(0.25, uTime * 0.01)).r - 0.5, 
+        texture(uPerlinNoise, vec2(0.75, uTime * 0.01)).r - 0.5
+    );
+    newPosition.xz += pow(uv.y, 2.0) * windOffset * 10.0 ;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
     // we send uv to the fragment shader
     vUv = uv;

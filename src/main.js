@@ -39,7 +39,7 @@ const material = new THREE.ShaderMaterial({
     uTime: new THREE.Uniform(0),
     uPerlinNoise: new THREE.Uniform(perlinNosie),
   },
-  wireframe: true,
+  // wireframe: true,
   side: THREE.DoubleSide,
   transparent: true,
 });
