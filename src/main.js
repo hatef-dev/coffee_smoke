@@ -10,14 +10,10 @@ const canvas = document.querySelector("#app");
 const textureLoader = new THREE.TextureLoader();
 const gltfLoader = new GLTFLoader();
 
-gltfLoader.load(
-  "./bakedModel.glb",
-  (gltf) => {
-    const mesh = gltf.scene.children[0];
-    scene.add(mesh);
-  },
-)
-
+gltfLoader.load("./bakedModel.glb", (gltf) => {
+  const mesh = gltf.scene.children[0];
+  scene.add(mesh);
+});
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -29,18 +25,28 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(2, 5, 5);
 scene.add(camera);
 
+const perlinNosie = textureLoader.load("./perlin.png");
+perlinNosie.wrapS = THREE.RepeatWrapping;
+perlinNosie.wrapT = THREE.RepeatWrapping;
+
 const geometry = new THREE.PlaneGeometry(1, 1, 16, 64);
 geometry.translate(0, 0.5, 0);
-geometry.scale(1.5, 6, 1.5)
+geometry.scale(1.5, 6, 1.5);
 const material = new THREE.ShaderMaterial({
   vertexShader,
   fragmentShader,
+  uniforms: {
+    uTime: new THREE.Uniform(0),
+    uPerlinNoise: new THREE.Uniform(perlinNosie),
+  },
   wireframe: true,
   side: THREE.DoubleSide,
+  transparent: true,
 });
 const smoke = new THREE.Mesh(geometry, material);
 smoke.position.set(0, 1.83, 0);
 scene.add(smoke);
+
 
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -66,6 +72,10 @@ const clock = new THREE.Clock();
 const tick = () => {
   window.requestAnimationFrame(tick);
   const elpsedTime = clock.getElapsedTime();
+  material.uniforms.uTime.value = elpsedTime;
+
+
+
   controls.update();
   renderer.render(scene, camera);
 };
