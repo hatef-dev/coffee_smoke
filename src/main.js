@@ -2,7 +2,8 @@ import * as THREE from "three";
 import GUI from "lil-gui";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
-
+import vertexShader from "./glsl/vertex.glsl";
+import fragmentShader from "./glsl/fragment.glsl";
 const gui = new GUI();
 
 const canvas = document.querySelector("#app");
@@ -32,7 +33,8 @@ const geometry = new THREE.PlaneGeometry(1, 1, 16, 64);
 geometry.translate(0, 0.5, 0);
 geometry.scale(1.5, 6, 1.5)
 const material = new THREE.ShaderMaterial({
-  color: "cyan",
+  vertexShader,
+  fragmentShader,
   wireframe: true,
   side: THREE.DoubleSide,
 });
